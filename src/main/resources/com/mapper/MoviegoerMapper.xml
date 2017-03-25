@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.MoviegoerMapper">
+	
+	<resultMap id="MoviegoerResult" type="Moviegoer">
+		<result property="mname" column="mname" />
+		<result property="street" column="street" />
+		<result property="city" column="city" />
+		<result property="state" column="state" />	
+		<result property="zip" column="zip" />
+		<result property="phone" column="phone" />
+		<result property="email" column="email" />
+		<result property="password" column="password" />
+	</resultMap>
+	
+	<resultMap id="Review" type="Review">
+		<result property="revid" column="revid" />
+		<result property="rating" column="rating" />
+		<result property="text" column="text" />
+		<result property="title" column="title" />
+		<result property="mname" column="mname" />	
+	</resultMap>
+	
+	
+	<insert id="insertMoviegoer" parameterType="Moviegoer" keyProperty="mname">
+		INSERT INTO moviegoer (mname,street,city,state,zip,phone,email,password) VALUES (#{mname},#{street},#{state},#{city},#{zip},#{phone},#{email},#{password})
+	</insert>
+	
+	<select id="selectByMoviegoer" parameterType="String" resultType="hashmap">
+		SELECT password FROM moviegoer where mname = #{mname}
+	</select>
+	
+	<select id="selectAllMovie"  resultType="hashmap">
+		SELECT title FROM movie
+	</select>
+	
+	<select id="selectActorByMovie"  parameterType="String" resultType="hashmap">
+		SELECT aname FROM acts_in where title = #{title}
+	</select>
+	
+	<select id="selectAllActor"  resultType="hashmap">
+		SELECT aname FROM actor
+	</select>
+	
+	<select id="selectMovieByActor"  parameterType="String" resultType="hashmap">
+		SELECT title FROM acts_in where aname = #{aname} and role = 'Actor'
+	</select>
+	
+	<select id="selectMovieByDirector"  parameterType="String" resultType="hashmap">
+		SELECT title FROM acts_in where aname = #{aname} and role = 'Director'
+	</select>
+	
+	<select id="selectMovieByProducer"  parameterType="String" resultType="hashmap">
+		SELECT title FROM acts_in where aname = #{aname} and role = 'Producer'
+	</select>
+	
+	<select id="selectMovieByKeyword"  parameterType="String" resultType="hashmap">
+		SELECT title FROM movie where title like #{keyword}
+	</select>
+	
+	<select id="selectActorByKeyword"  parameterType="String" resultType="hashmap">
+		SELECT aname FROM actor where aname like #{keyword}
+	</select>
+
+	<select id="selectReview"  parameterType="String" resultType="hashmap">
+		SELECT count(*) as COUNT, AVG(rating) as AVG FROM review where title = #{movie}
+	</select>
+	
+	<insert id="insertReview" parameterType="Review" keyProperty="revid">
+		INSERT INTO Review (revid,rating,text,title,mname) VALUES (rev_seq.nextval,#{rating},#{text},#{title},#{mname})
+	</insert>
+
+</mapper>
